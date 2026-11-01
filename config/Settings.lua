@@ -1,8 +1,8 @@
 -- SPDX-License-Identifier: MPL-2.0
 local _, addon = ...
 addon.defaults = {
-    textChance = 100, cooldown = 0, racialTextChance = 40,
+    textChance = 30, cooldown = 20, racialTextChance = 40,
     outputLanguage = "deDE", chatChannel = "SAY",
-    ambientChance = 30, ambientEnabled = false, ambientInCombat = false,
-    ambientMinInterval = 120, ambientMaxInterval = 300,
+    ambientChance = 70, ambientEnabled = true, ambientInCombat = false,
+    ambientMinInterval = 180, ambientMaxInterval = 420,
 }
