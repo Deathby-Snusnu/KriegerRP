@@ -176,6 +176,7 @@ SlashCmdList["KRIEGERRP"] = function(message)
         local field = command == "chance" and "textChance" or
             (command == "cooldown" and "cooldown" or "racialTextChance")
         addon.db[field] = n
+        if field == "textChance" and n == 0 then addon.ResetAmbientTimer() end
         notify(field .. ": " .. n)
     else
         local key = input:upper()
