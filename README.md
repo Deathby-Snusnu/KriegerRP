@@ -1,16 +1,57 @@
-# KriegerRP 0.1.0
+# KriegerRP 0.1.0 (Entwicklungsstand)
 
-Ein eigenständiges, mehrsprachiges WoW-RP-AddOn für Kriegerinnen und Krieger. Die Sprache ist **geschlechtsneutral**, die Anrede und Tonlage richten sich nach Volk und Fähigkeit. Vorgesehen sind Classic-/Forever-nahe Fähigkeitsschlüssel; ob sie im verwendeten Client verfügbar sind, muss im Spiel geprüft werden.
+**KriegerRP** ist das eigenständige Klassen-RP-AddOn für Kriegerinnen und Krieger
+im WoW-Classic+/Forever-Umfeld. Es liefert Fähigkeits- und Ambient-Texte,
+volkstypische Sprechweisen, `/say` und `/me`-Emotes sowie die
+gemeinsame Volkssprache von RPChatMod, sofern RPChatMod installiert ist.
 
-**Start:** `/krp help` oder `/kriegerrp help`. `/krp list` zeigt alle 43 Schlüssel.
+**Status:** [Erstversion als Pull Request #1](https://github.com/Deathby-Snusnu/KriegerRP/pull/1).
+Die beschriebenen Änderungen sind erst nach dem Merge und einer Aktualisierung
+der installierten Dateien im WoW-Client verfügbar. Ein erfolgreicher Ingame-Test
+ist noch nicht bestätigt.
 
-**Beispiele:** `/krp CHARGE`, `/krp BATTLE_SHOUT`, `/krp SHIELD_BLOCK`, `/krp EXECUTE`, `/krp AMBIENT`.
+## Installation
 
-**Ambient:** `/krp ambient` probiert manuell einen volkstypischen Text. Automatische Ambient-Ausgaben sind zunächst **deaktiviert** und können im RPControlCenter bei installiertem KriegerRP aktiviert werden. Standardintervall: 120–300 Sekunden, mit Chance und optionaler Kampf-Sperre.
+Den Ordner `KriegerRP` direkt nach
+`<WoW>/Interface/AddOns/KriegerRP/` installieren. Die Datei
+`KriegerRP.toc` muss unmittelbar darin liegen. Die
+`## Interface: 16001`-Angabe entspricht dem vorgesehenen Forever-Profil;
+eine TOC-Anpassung allein beweist keine API-Kompatibilität.
 
-**Einstellungen:** `/krp chance 35`, `/krp cooldown 5`, `/krp racial 60`, `/krp language deDE`, `/krp channel AUTO`, `/krp status`.
+Alternativ kann [RPAddOns](https://github.com/Deathby-Snusnu/RPAddOns)
+KriegerRP als Git-Submodul paketieren und installieren. Der externe
+GitHub-Katalog von RPTextStudio wird über
+[PR #44](https://github.com/Deathby-Snusnu/RPTextStudio/pull/44) erweitert.
+Installationen und Updates mit RPTextStudio behalten ihren gesonderten,
+geschützten Bestätigungs- und Sicherungsablauf.
 
-**Makro-Beispiel:**
+Nach der Installation das Spiel starten oder bei Änderungen `/reload` nutzen.
+Hilfe: `/krp help` oder `/kriegerrp help`.
+
+## Befehle
+
+| Befehl | Wirkung |
+| --- | --- |
+| `/krp <KEY>` | RP-Text zu einer Kriegerfähigkeit, z. B. `CHARGE`, `SHIELD_BLOCK` |
+| `/krp list` | Verfügbare Fähigkeitsschlüssel |
+| `/krp list racial` | Schlüssel mit rassespezifischen Texten für die aktuelle Rasse |
+| `/krp list all` | Alle Schlüssel und kompakte Herkunftskennzeichen (F = Fähigkeit, V = Völker) |
+| `/krp status`, `/krp debug` | Einstellungen bzw. technische Diagnose |
+| `/krp chance 0-100`, `/krp cooldown 0-3600` | Textwahrscheinlichkeit und Sekundenabstand |
+| `/krp racial 0-100` | Chance auf rassespezifische Texte |
+| `/krp language deDE\|enUS\|frFR` | Textsprache |
+| `/krp channel SAY\|YELL\|AUTO\|PARTY\|RAID\|INSTANCE_CHAT` | Chatkanal für gesprochene Texte |
+| `/krp ambient` bzw. `/krp ambient test` | Manuell Ambient-Text versuchen |
+| `/krp ambient on\|off` | Automatische Ambient-Vormerkung aktivieren/deaktivieren |
+| `/krp ambient status`, `/krp ambient chance 0-100` | Ambient-Anzeige und Wahrscheinlichkeit |
+| `/krp ambient combat on\|off` | Ambient während des Kampfs erlauben/verbieten |
+| `/krp ambient interval MIN MAX` | Intervall in Sekunden, jeweils 30 bis 7200 |
+
+Die `/krp`-Befehle erzeugen nur Texte, **keine Fähigkeiten**.
+Fähigkeiten werden nicht automatisch erkannt und ein Makro prüft
+keinen tatsächlichen Kampferfolg.
+
+### Makrobeispiel
 
 ```text
 #showtooltip Sturmangriff
@@ -18,40 +59,85 @@ Ein eigenständiges, mehrsprachiges WoW-RP-AddOn für Kriegerinnen und Krieger. 
 /krp CHARGE
 ```
 
-Die AddOn-Ausgabe bestätigt **keinen tatsächlich erfolgreichen Zauber oder Angriff**. Sie reagiert auf den expliziten Makro-Aufruf. Kampftexte werden nach Chance/Cooldown still unterdrückt. Texte mit `*...` laufen über den Emote-Chat; normale Texte über den konfigurierten Kanal. Zielnamen werden nur bei explizit zielgerichteten Angriffs- und Spott-Schlüsseln eingesetzt, nicht für defensive Fähigkeiten, Schreie und Flächenangriffe.
+Die RP-Zeile ist optional. `TACTICAL_MASTERY` (**Taktiker**) ist passiv:
+`/krp TACTICAL_MASTERY` ist nur Erzähltext, **kein** `/cast`-Zauber.
+`DEVASTATE` wird als zusätzlicher RP-Schlüssel geführt, aber nicht als
+eigenständige aktive Fähigkeit im geprüften Zauberbuch bestätigt.
 
-## Vollständigkeit des Forever-Zauberbuchs
+## Standardwerte für neue Charaktere
 
-Abgleich mit dem Krieger-Zauberbuch des Forever-Beta-Clients **1.60.1.70707**
-(Stand 30. Oktober 2026): Alle **42** dort gelisteten Klassenfähigkeiten sind
-als RP-Schlüssel erfasst, einschließlich Kampfhaltung, Verteidigungshaltung,
-Berserkerhaltung, Durchdringendem Heulen, Aufspießendem Stoß und Taktiker.
+| Option | Standardwert |
+| --- | --- |
+| Textchance | 30 % |
+| Cooldown | 20 Sekunden |
+| Rassenspezifische Texte | 40 % |
+| Ausgabesprache und Kanal | `deDE` und `SAY` |
+| Automatisches Ambient | Aktiviert (nur vormerken, **niemals direkt aus dem Timer senden**) |
+| Ambient-Chance | 70 % |
+| Ambient-Intervall | 180 bis 420 Sekunden |
+| Ambient im Kampf | Deaktiviert |
 
-`TACTICAL_MASTERY` (**Taktiker**) ist eine **passive** Fähigkeit und darf
-nicht mit `/cast` als aktiver Zauber in einem Makro verwendet werden.
-`/krp TACTICAL_MASTERY` ist ein rein erzählerischer, freiwilliger Textaufruf.
-`DEVASTATE` ist ein **zusätzlicher** RP-Schlüssel für einen in den Clientdaten
-enthaltenen Auslöseeffekt von `SUNDER_ARMOR`, jedoch keine bestätigte
-eigenständige aktive Fähigkeit im 42er-Zauberbuch. Ein `/cast Verwüsten`-Makro
-ist deshalb nicht pauschal gültig.
+Bereits gespeicherte Werte in `KriegerRP_CharacterDB` bleiben erhalten,
+solange sie gültig sind. Die Zeitsteuerung merkt Ambient nur vor.
+Ein fälliger Text wird bei der **nächsten bewusst ausgelösten RP-Aktion**
+statt des Fähigkeitstextes ausgegeben, sofern Klasse, Kampf und Cooldown
+passen. Damit entstehen keine unbeabsichtigten Chat-Ausgaben allein durch
+einen Timer. Der manuelle Ambient-Test funktioniert auch bei deaktivierter
+Automatik. Mehr dazu in [AMBIENT.md](AMBIENT.md).
 
-Nicht abgedeckt sind sämtliche passiven Talent- und Waffenboni, automatische
-Procs sowie nicht zur 42er-Zauberbuchliste gehörende Saison-/Beta-IDs. Diese
-sind keine eigenständig nutzbaren Aktionsknöpfe. Die Verfügbarkeit einzelner
-Fähigkeiten hängt von Talentwahl, Level und WoW-Client ab.
+## Fähigkeitsabdeckung und Sprachen
+
+Die drei Laufzeitkataloge `deDE`, `enUS` und `frFR` enthalten jeweils
+**43 RP-Schlüssel**: die 42 Einträge des verglichenen
+Forever-Beta-Kriegerzauberbuchs (Build **1.60.1.70707**,
+Stand **30. Oktober 2026**) plus `DEVASTATE` als zusätzlichen
+Erzähltext. Die genannte Abdeckung bezieht sich nur auf diesen
+Zauberbuchstand, **nicht** auf sämtliche passiven Boni, Proc-IDs und
+künftigen Forever-Änderungen.
 
 Quelle: https://foreverchanges.pro/spellbook/warrior
 
-## Sprachen und Völker
+Für jeden Schlüssel gibt es allgemeine, ausdrücklich wirkungsbezogene
+Formulierungen und Emotes sowie Texte für zehn Völker: Gnome, Menschen,
+Zwerge, Nachtelfen, Draenei, Orcs, Trolle, Tauren, Untote und Blutelfen.
+Die Texte sind geschlechtsneutral, sodass sie zu Kriegerinnen und Kriegern
+passen. Nicht erkannte Völker erhalten allgemeine Texte und neutrale
+Ambient-Formulierungen.
 
-Alle 43 RP-Schlüssel sind in **deDE, enUS, frFR** vorhanden. Die Volkstexte unterstützen **Gnome, Menschen, Zwerge, Nachtelfen, Draenei, Orcs, Trolle, Tauren, Untote und Blutelfen**. Nicht erkannte Völker erhalten allgemeine Fähigkeitstexte und neutrale Ambient-Formulierungen. `/krp racial 40` ist die Chance auf volkstypische Texte.
+Nur **zielgerichtete Feindfähigkeiten** dürfen den ausgewählten angreifbaren
+Gegner in ihren Texten nennen. Haltungen, Schreie, Flächenangriffe und
+Selbstfähigkeiten nennen keinen zufällig ausgewählten Charakter.
+`%s` wird nur im zulässigen Zielpool verwendet.
 
-## Installation
+## Chat und Zusammenspiel
 
-`KriegerRP.toc` muss direkt unter `Interface/AddOns/KriegerRP/` liegen. RPChatMod ist optional; wenn es geladen ist, übernimmt KriegerRP für SAY/YELL dessen Sprachpolitik (Volkssprache, Gruppensprache). Die `## Interface: 16001`-Zeile ist nur Metadaten und gegebenenfalls an den tatsächlich getesteten Client anzupassen.
+`*...`-Texte gehen ohne Sternchen als `EMOTE` heraus. Andere Texte
+nutzen den eingestellten Chatkanal. Bei `SAY` oder `YELL` wird, sofern
+verfügbar, `RPChatMod.GetChatLanguageID(channel)` verwendet.
+Im `AUTO`-Modus wird je nach Gruppe / Schlachtzug / Instanz der
+geeignete Chatkanal gewählt.
 
-Die Weiterentwicklung erfolgt im **eigenen Repository** `Deathby-Snusnu/KriegerRP`. Das Sammelrepository `RPAddOns` bindet KriegerRP als Git-Submodul ein. RPTextStudio kann es nach Übernahme des Katalog-PR #44 direkt von GitHub laden, sobald diese Erstversion in `main` gemergt ist. Die Sammlung kann es weiterhin als Submodul paketieren und installieren.
+[RPControlCenter PR #6](https://github.com/Deathby-Snusnu/RPControlCenter/pull/6)
+ergänzt KriegerRP zur Ingame-Konfiguration. Alle Einstellungen bleiben
+**pro Charakter** im eigenen AddOn gespeichert.
 
-## Lizenz
+## Entwicklung und Tests
 
-Laufzeitcode: MPL-2.0. Kreative Textpools: CC BY-SA 4.0, siehe die Lizenzunterlagen des Sammelrepositories.
+- Lua-Test: `lua tests/test_runtime.lua` mit Lua 5.1 oder 5.4.
+- Statische Katalogprüfung: `python -m unittest discover -s tests -p "test_*.py"`.
+- Manuelle Prüfung: WoW-Login, `/krp list racial`, `/krp ambient on`,
+  mehrere Fähigkeiten mit/ohne Ziel, `/say`/`/me` und RPControlCenter.
+
+Ein Testgerüst ist vorhanden, aber ein vollständiger Lauf und eine
+Ingame-Validierung sind noch offen. Änderungen:
+[CHANGELOG.md](CHANGELOG.md).
+
+## Lizenz und Hinweise
+
+Der **Lua-Programmcode und Tests** stehen unter **MPL-2.0**
+([LICENSE-CODE](LICENSE-CODE)). Die **kreativen Texte und Übersetzungen**
+stehen unter **CC BY-SA 4.0** ([LICENSE-TEXTS](LICENSE-TEXTS)).
+Die Zuordnung ist *nicht* wahlweise und wird in
+[LICENSING.md](LICENSING.md) und [NOTICE](NOTICE) dokumentiert.
+KriegerRP ist ein unabhängiges Fanprojekt, keine offizielle
+Blizzard-Veröffentlichung.
