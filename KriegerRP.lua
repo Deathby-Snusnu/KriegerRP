@@ -2,31 +2,26 @@
 local _, addon = ...
 _G.KriegerRP = addon
 addon.ready = false
-local nextAllowed = 0
-local function permitted()
-    if not addon.ready or not addon.db then return false end
+
+local function isWarrior()
     local _, class = UnitClass("player")
-    if class ~= "WARRIOR" then return false end
-    return GetTime() >= nextAllowed and math.random(100) <= addon.db.textChance
+    return class == "WARRIOR"
 end
-local function emit(text)
-    if type(text) ~= "string" or not addon.SendText(text) then return false end
-    nextAllowed = GetTime() + addon.db.cooldown
+
+function addon.TryText(key)
+    if not addon.ready or not addon.db or not isWarrior() then return false end
+    if type(key) ~= "string" or key == "" then return false end
+    -- An ambient reminder never sends from the timer. The next player
+    -- RP action can send it instead of the requested ability line.
+    if addon.FlushPendingAmbient and addon.FlushPendingAmbient() then return true end
+    if not addon.CooldownReady() then return false end
+    if math.random(100) > addon.db.textChance then return false end
+    local line = addon.BuildText(key:upper())
+    if not line or not addon.SendText(line) then return false end
+    addon.StartCooldown()
     return true
 end
-function addon.TryText(key)
-    if not permitted() then return false end
-    return emit(addon.BuildText(key))
-end
-function addon.TryAmbient(_, force)
-    if force == nil then force = true end
-    if not permitted() then return false end
-    if not force and not addon.db.ambientEnabled then return false end
-    if addon.db.ambientInCombat == false and type(UnitAffectingCombat) == "function"
-        and UnitAffectingCombat("player") then return false end
-    if math.random(100) > addon.db.ambientChance then return false end
-    return emit(addon.BuildAmbient())
-end
+
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:SetScript("OnEvent", function()
