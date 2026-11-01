@@ -26,7 +26,7 @@ Alle 37 Fähigkeitsschlüssel sind in **deDE, enUS, frFR** vorhanden. Die Volkst
 
 `KriegerRP.toc` muss direkt unter `Interface/AddOns/KriegerRP/` liegen. RPChatMod ist optional; wenn es geladen ist, übernimmt KriegerRP für SAY/YELL dessen Sprachpolitik (Volkssprache, Gruppensprache). Die `## Interface: 16001`-Zeile ist nur Metadaten und gegebenenfalls an den tatsächlich getesteten Client anzupassen.
 
-Bis ein eigenes `Deathby-Snusnu/KriegerRP`-Repository existiert, wird diese Entwicklung **im Sammelrepository RPAddOns** verwaltet. Der externe GitHub-Updater von RPTextStudio kann kein nicht existentes Repository beziehen. Der vorhandene Collection-Installer kann dieses AddOn als lokalen Quellordner verpacken und installieren.
+Die Weiterentwicklung erfolgt im **eigenen Repository** `Deathby-Snusnu/KriegerRP`. Das Sammelrepository `RPAddOns` bindet KriegerRP als Git-Submodul ein. RPTextStudio kann es nach Übernahme des Katalog-PR #44 direkt von GitHub laden, sobald diese Erstversion in `main` gemergt ist. Die Sammlung kann es weiterhin als Submodul paketieren und installieren.
 
 ## Lizenz
 
