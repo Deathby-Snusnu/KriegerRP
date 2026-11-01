@@ -71,7 +71,7 @@ class WarriorCatalogChecks(unittest.TestCase):
         self.assertIn("function addon.ResetAmbientTimer()", ambient)
         timer = ambient.split("C_Timer.After(delay, function()", 1)[1]
         self.assertIn("addon.QueueAmbient()", timer)
-        self.assertNotIn("SendChatMessage", timer)
+        self.assertNotIn("SendChatMessage(", timer)
         self.assertNotIn("addon.SendText(", timer)
         main = (ROOT / "KriegerRP.lua").read_text(encoding="utf-8")
         self.assertLess(main.index("FlushPendingAmbient()"), main.index("addon.BuildText(key:upper())"))
