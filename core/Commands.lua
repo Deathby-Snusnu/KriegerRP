@@ -61,10 +61,14 @@ local function listKeys(mode)
         for j = i, math.min(i + 5, #names) do
             local key = names[j]
             if mode == "all" then
-                local origins = {}
-                for source in pairs(found[key]) do origins[#origins + 1] = source end
-                table.sort(origins)
-                chunk[#chunk + 1] = key .. " [" .. table.concat(origins, "/") .. "]"
+                local races = 0
+                local ability = false
+                for source in pairs(found[key]) do
+                    if source == "Faehigkeit" then ability = true
+                    elseif source:sub(1, 5) == "Volk:" then races = races + 1 end
+                end
+                chunk[#chunk + 1] = key ..
+                    " [" .. (ability and "F" or "") .. (races > 0 and ("/V" .. races) or "") .. "]"
             else
                 chunk[#chunk + 1] = key
             end
