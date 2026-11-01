@@ -1,22 +1,82 @@
 -- SPDX-License-Identifier: MPL-2.0
+-- Timers only QUEUE ambient RP. Chat is sent on a player-triggered action.
 local _, addon = ...
--- A generation token prevents stale scheduled callbacks from continuing.
 local generation = 0
+local pending = false
+
+local function isWarrior()
+    local _, class = UnitClass("player")
+    return class == "WARRIOR"
+end
+
+local function combatAllowed()
+    return addon.db.ambientInCombat or type(UnitAffectingCombat) ~= "function"
+        or not UnitAffectingCombat("player")
+end
+
+function addon.HasPendingAmbient()
+    return pending
+end
+
+function addon.QueueAmbient()
+    if not addon.ready or not addon.db or not isWarrior() or not addon.db.ambientEnabled then
+        return false
+    end
+    if not combatAllowed() or math.random(100) > addon.db.ambientChance then
+        return false
+    end
+    pending = true
+    return true
+end
+
+function addon.FlushPendingAmbient()
+    if not pending or not addon.ready or not addon.db then return false end
+    if not addon.db.ambientEnabled then pending = false; return false end
+    if not isWarrior() or not combatAllowed() or not addon.CooldownReady() then
+        return false
+    end
+    -- Consume the pending event before sending: a failed send must not spam.
+    pending = false
+    local line = addon.BuildAmbient()
+    if line and addon.SendText(line) then
+        addon.StartCooldown()
+        return true
+    end
+    return false
+end
+
+function addon.TryAmbient(_, force)
+    -- Manual /krp ambient is available even if automatic ambient is disabled.
+    if force == nil then force = true end
+    if not addon.ready or not addon.db or not isWarrior() then return false end
+    if not force then return addon.QueueAmbient() end
+    if not combatAllowed() or not addon.CooldownReady() then return false end
+    if math.random(100) > addon.db.textChance then return false end
+    local line = addon.BuildAmbient()
+    if line and addon.SendText(line) then
+        addon.StartCooldown()
+        return true
+    end
+    return false
+end
+
 function addon.ResetAmbientTimer()
     generation = generation + 1
-    local thisGeneration = generation
+    pending = false
+    local token = generation
     if not addon.ready or not addon.db or not addon.db.ambientEnabled then return end
     if not C_Timer or type(C_Timer.After) ~= "function" then return end
-    local min = math.floor(addon.db.ambientMinInterval or 120)
-    local max = math.floor(addon.db.ambientMaxInterval or 300)
+    local min = math.floor(addon.db.ambientMinInterval or 180)
+    local max = math.floor(addon.db.ambientMaxInterval or 420)
     if min < 30 then min = 30 end
     if max < min then max = min end
+
     local function schedule()
         local delay = math.random(min, max)
         C_Timer.After(delay, function()
-            if thisGeneration ~= generation or not addon.db.ambientEnabled then return end
-            if addon.TryAmbient then addon.TryAmbient(nil, false) end
-            if thisGeneration == generation and addon.db.ambientEnabled then schedule() end
+            if token ~= generation or not addon.db.ambientEnabled then return end
+            addon.QueueAmbient() -- Never SendChatMessage in a timer callback.
+            if token == generation and addon.db.ambientEnabled then schedule() end
         end)
     end
     schedule()
