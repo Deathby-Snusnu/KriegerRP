@@ -1,0 +1,30 @@
+name: KriegerRP content and runtime checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Lua 5.1
+        run: sudo apt-get update && sudo apt-get install -y lua5.1
+
+      - name: Run text, license, and source checks
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+
+      - name: Run WoW runtime smoke harness
+        run: lua5.1 tests/test_runtime.lua
