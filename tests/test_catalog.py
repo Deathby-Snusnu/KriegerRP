@@ -67,14 +67,14 @@ class WarriorCatalogChecks(unittest.TestCase):
     def test_timer_never_sends_chat(self):
         ambient = (ROOT / "core" / "Ambient.lua").read_text(encoding="utf-8")
         self.assertIn("function addon.QueueAmbient()", ambient)
-        self.assertIn("function addon.FlushPendingAmbient()", ambient)
+        self.assertIn("function addon.FlushPendingAmbient(chancePassed)", ambient)
         self.assertIn("function addon.ResetAmbientTimer()", ambient)
         timer = ambient.split("C_Timer.After(delay, function()", 1)[1]
         self.assertIn("addon.QueueAmbient()", timer)
         self.assertNotIn("SendChatMessage(", timer)
         self.assertNotIn("addon.SendText(", timer)
         main = (ROOT / "KriegerRP.lua").read_text(encoding="utf-8")
-        self.assertLess(main.index("FlushPendingAmbient()"), main.index("addon.BuildText(key:upper())"))
+        self.assertLess(main.index("FlushPendingAmbient("), main.index("addon.BuildText(key:upper())"))
 
     def test_split_licenses_and_docs(self):
         self.assertEqual(

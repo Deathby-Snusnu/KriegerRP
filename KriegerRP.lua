@@ -11,11 +11,13 @@ end
 function addon.TryText(key)
     if not addon.ready or not addon.db or not isWarrior() then return false end
     if type(key) ~= "string" or key == "" then return false end
+    if not addon.CooldownReady() then return false end
+    local chancePassed = addon.db.textChance > 0
+        and math.random(100) <= addon.db.textChance
     -- An ambient reminder never sends from the timer. The next player
     -- RP action can send it instead of the requested ability line.
-    if addon.FlushPendingAmbient and addon.FlushPendingAmbient() then return true end
-    if not addon.CooldownReady() then return false end
-    if math.random(100) > addon.db.textChance then return false end
+    if addon.FlushPendingAmbient and addon.FlushPendingAmbient(chancePassed) then return true end
+    if not chancePassed then return false end
     local line = addon.BuildText(key:upper())
     if not line or not addon.SendText(line) then return false end
     addon.StartCooldown()

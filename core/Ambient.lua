@@ -29,7 +29,7 @@ function addon.QueueAmbient()
     return true
 end
 
-function addon.FlushPendingAmbient()
+function addon.FlushPendingAmbient(chancePassed)
     if not pending or not addon.ready or not addon.db then return false end
     if not addon.db.ambientEnabled or addon.db.textChance <= 0 then
         pending = false
@@ -38,8 +38,7 @@ function addon.FlushPendingAmbient()
     if not isWarrior() or not combatAllowed() or not addon.CooldownReady() then
         return false
     end
-    -- Also honour the global text chance used by RPControlCenter.
-    if math.random(100) > addon.db.textChance then return false end
+    if not chancePassed then return false end
     -- Consume the pending event before sending: a failed send must not spam.
     pending = false
     local line = addon.BuildAmbient()

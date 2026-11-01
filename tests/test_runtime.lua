@@ -126,6 +126,18 @@ assert(#state.sent==before+1 and not addon.HasPendingAmbient())
 addon.ResetAmbientTimer()
 state.timers[#state.timers].callback()
 assert(addon.HasPendingAmbient())
+addon.db.textChance=30
+local originalRandom=env.math.random
+local randomCalls=0
+env.math.random=function()
+    randomCalls=randomCalls+1
+    return randomCalls==1 and 31 or 1
+end
+local pendingSent=#state.sent
+assert(not addon.TryText("SHIELD_BLOCK"), "failed ambient chance must not reroll ability text")
+assert(#state.sent==pendingSent and addon.HasPendingAmbient())
+assert(randomCalls==1, "RP action should roll global text chance only once")
+env.math.random=originalRandom
 addon.db.textChance=0
 local muted=#state.sent
 assert(not addon.TryText("SHIELD_BLOCK"), "chance 0 must mute queued ambient and ability text")
