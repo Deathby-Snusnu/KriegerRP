@@ -30,5 +30,5 @@ frame:SetScript("OnEvent", function()
     addon.InitializeDatabase()
     addon.ready = true
     if addon.ResetAmbientTimer then addon.ResetAmbientTimer() end
-    print("|cffffaa55KriegerRP 0.1.0 geladen.|r /krp help")
+    print("|cffffaa55KriegerRP 0.1.1 geladen.|r /krp help")
 end)

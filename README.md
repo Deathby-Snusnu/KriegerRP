@@ -1,14 +1,13 @@
-# KriegerRP 0.1.0 (Entwicklungsstand)
+# KriegerRP 0.1.1 (Textüberarbeitung)
 
 **KriegerRP** ist das eigenständige Klassen-RP-AddOn für Kriegerinnen und Krieger
 im WoW-Classic+/Forever-Umfeld. Es liefert Fähigkeits- und Ambient-Texte,
 volkstypische Sprechweisen, `/say` und `/me`-Emotes sowie die
 gemeinsame Volkssprache von RPChatMod, sofern RPChatMod installiert ist.
 
-**Status:** [Erstversion als Pull Request #1](https://github.com/Deathby-Snusnu/KriegerRP/pull/1).
-Die beschriebenen Änderungen sind erst nach dem Merge und einer Aktualisierung
-der installierten Dateien im WoW-Client verfügbar. Ein erfolgreicher Ingame-Test
-ist noch nicht bestätigt.
+**Status:** Die Erstversion ist auf `main`; die kreative Textüberarbeitung
+wird in einem separaten Pull Request vorbereitet. Ein vollständiger
+WoW-Forever-Ingame-Test der neuen Textsammlungen steht noch aus.
 
 ## Installation
 
@@ -19,9 +18,9 @@ Den Ordner `KriegerRP` direkt nach
 eine TOC-Anpassung allein beweist keine API-Kompatibilität.
 
 Alternativ kann [RPAddOns](https://github.com/Deathby-Snusnu/RPAddOns)
-KriegerRP als Git-Submodul paketieren und installieren. Der externe
-GitHub-Katalog von RPTextStudio wird über
-[PR #44](https://github.com/Deathby-Snusnu/RPTextStudio/pull/44) erweitert.
+KriegerRP als Git-Submodul paketieren und installieren. RPTextStudio enthält den
+GitHub-Katalogeintrag aus dem bereits gemergten
+[PR #44](https://github.com/Deathby-Snusnu/RPTextStudio/pull/44).
 Installationen und Updates mit RPTextStudio behalten ihren gesonderten,
 geschützten Bestätigungs- und Sicherungsablauf.
 
@@ -85,6 +84,44 @@ passen. Damit entstehen keine unbeabsichtigten Chat-Ausgaben allein durch
 einen Timer. Der manuelle Ambient-Test funktioniert auch bei deaktivierter
 Automatik. Mehr dazu in [AMBIENT.md](AMBIENT.md).
 
+## Neue Sprechstimmen und kreative Texte
+
+KriegerRP spricht **nicht wie ein Kampflog**: der Name der gewirkten
+Fähigkeit steht nur als Metadatum in den Katalogen. Die ausgewählten Zeilen
+sind Dialoge, Provokationen, Schutzversprechen, situative Beobachtungen oder
+Handlungen. `*...`-Einträge werden als `/me` ausgegeben; andere als
+`/say` beziehungsweise über den eingestellten Kanal.
+
+Die Version 0.1.1 enthält in jeder Sprache:
+- **43 Fähigkeiten**, jeweils vier allgemeine Textvarianten (2 gesprochen,
+  2 Emotes) und zwei feindbezogene Varianten für 22 gerichtete Aktionen
+- **10 Rassenstimmen** mit jeweils vier Varianten für jeden Fähigkeitsschlüssel
+  (je 2 gesprochen und 2 Emotes)
+- **11 Ambient-Pools** mit jeweils acht Varianten, einschließlich
+  neutralem Fallback
+
+Das sind **2.024 auswählbare Rollenspieltexte pro Sprache**, zusammen
+**6.072** in deDE/enUS/frFR. Titel und Fähigkeitsmetadaten sind dabei
+nicht mitgezählt. Die Textauswahl behält den bisherigen Zufallsmechanismus
+und die im Control Center einstellbare `racialTextChance` bei.
+
+Auch innerhalb derselben Fähigkeit unterscheiden sich die Völker hörbar.
+Ein Gnom spricht von Berechnungen und Experimenten, Zwerge von Bier,
+Sturheit und Handwerk, Orcs von Ehre und Clan, Tauren von Erdenmutter
+und Schutz, Untote mit trockenem Humor. Neben den spieltypischen
+Anspielungen enthalten die Rassenpools besondere, gezielt für einzelne
+Fähigkeiten geschriebene Sätze. Ausführliche Stilhinweise:
+[TEXTSTYLE.md](TEXTSTYLE.md).
+
+**Beispiel für einen Krieger beim Sturmangriff:**
+> „Ich komme! Das ist keine Warnung, sondern eine Wegbeschreibung!“
+
+**Beispiel für einen Zwergen-Krieger beim Schlachtruf:**
+> „Wer nach dem Kampf noch steht, kriegt mein letztes Fass. Also fast.“
+
+Die Texte geben **keine Erfolgsmeldung** des tatsächlichen Casts.
+Bei `/krp`-Makros werden sie bewusst als Rollenspiel ausgegeben.
+
 ## Fähigkeitsabdeckung und Sprachen
 
 Die drei Laufzeitkataloge `deDE`, `enUS` und `frFR` enthalten jeweils
@@ -128,8 +165,9 @@ ergänzt KriegerRP zur Ingame-Konfiguration. Alle Einstellungen bleiben
 - Manuelle Prüfung: WoW-Login, `/krp list racial`, `/krp ambient on`,
   mehrere Fähigkeiten mit/ohne Ziel, `/say`/`/me` und RPControlCenter.
 
-Ein Testgerüst ist vorhanden, aber ein vollständiger Lauf und eine
-Ingame-Validierung sind noch offen. Änderungen:
+Das Testgerüst umfasst außerdem kreative Textprüfungen für Länge,
+Textvielfalt, `/say`/`/me`-Verhältnis und Zielplatzhalter. Der
+vollständige Testlauf und die Ingame-Validierung stehen noch aus. Änderungen:
 [CHANGELOG.md](CHANGELOG.md).
 
 ## Lizenz und Hinweise
