@@ -8,6 +8,7 @@ local targeted = {
     OVERPOWER=true, MORTAL_STRIKE=true, BLOODTHIRST=true, INTERCEPT=true,
     PUMMEL=true, MOCKING_BLOW=true, DISARM=true, SLAM=true, DEVASTATE=true,
     SHIELD_SLAM=true, CONCUSSION_BLOW=true, VICTORY_RUSH=true,
+    SPEARING_STRIKE=true,
 }
 local function enemyName(key)
     if not targeted[key] or type(UnitExists) ~= "function" or not UnitExists("target") then return nil end
