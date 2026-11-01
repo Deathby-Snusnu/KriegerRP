@@ -17,6 +17,7 @@ locales\frFR\Texts.lua
 locales\frFR\Racial.lua
 locales\frFR\Ambient.lua
 core\Database.lua
+core\Cooldown.lua
 core\Ambient.lua
 core\Text.lua
 core\Chat.lua
