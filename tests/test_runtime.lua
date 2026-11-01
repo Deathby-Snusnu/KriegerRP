@@ -123,6 +123,14 @@ assert(#state.sent==before, "timer sent chat without a player action")
 assert(addon.HasPendingAmbient(), "timer did not queue ambient")
 assert(addon.TryText("SHIELD_BLOCK"), "queued ambient should flush on action")
 assert(#state.sent==before+1 and not addon.HasPendingAmbient())
+addon.ResetAmbientTimer()
+state.timers[#state.timers].callback()
+assert(addon.HasPendingAmbient())
+addon.db.textChance=0
+local muted=#state.sent
+assert(not addon.TryText("SHIELD_BLOCK"), "chance 0 must mute queued ambient and ability text")
+assert(#state.sent==muted and not addon.HasPendingAmbient())
+addon.db.textChance=100
 -- Turning ambient off must invalidate stale timers and discard queued lines.
 addon.ResetAmbientTimer()
 local stale=state.timers[#state.timers].callback
