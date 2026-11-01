@@ -26,7 +26,7 @@ function addon.InitializeDatabase()
         addon.db.ambientMaxInterval = addon.db.ambientMinInterval
     end
     local cd = addon.db.cooldown
-    if type(cd) ~= "number" or cd ~= cd or cd < 0 or cd > 3600 then
+    if type(cd) ~= "number" or cd ~= cd or cd ~= math.floor(cd) or cd < 0 or cd > 3600 then
         addon.db.cooldown = addon.defaults.cooldown
     end
     if not addon.availableLocales[addon.db.outputLanguage] then addon.db.outputLanguage = "deDE" end
