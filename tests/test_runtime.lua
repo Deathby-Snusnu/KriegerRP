@@ -4,7 +4,7 @@
 local root = (arg and arg[0] or "tests/test_runtime.lua"):gsub("\\", "/")
 root = root:match("^(.*)tests/test_runtime%.lua$") or "./"
 local state = { class="WARRIOR", race="Dwarf", target="Trainingspuppe",
-    hostile=true, now=100, sent={}, messages={} }
+    hostile=true, now=100, sent={}, messages={}, timers={} }
 local env = {assert=assert, error=error, ipairs=ipairs, pairs=pairs, select=select,
     tostring=tostring, tonumber=tonumber, type=type, next=next, string=string,
     table=table, math={}, print=function(m) state.messages[#state.messages+1]=m end}
@@ -20,6 +20,10 @@ env.UnitIsUnit = function(a,b) return a=="target" and b=="player" and state.targ
 env.UnitName = function(unit) return unit=="player" and "Bromli" or state.target end
 env.GetTime = function() return state.now end
 env.IsInGroup = function() return false end
+env.UnitAffectingCombat = function() return false end
+env.C_Timer = {After=function(seconds, callback)
+    state.timers[#state.timers + 1] = {seconds=seconds, callback=callback}
+end}
 env.IsInRaid = function() return false end
 env.C_ChatInfo = {SendChatMessage=function(line, channel, languageID)
     state.sent[#state.sent+1] = {line=line, channel=channel, languageID=languageID}
@@ -56,8 +60,11 @@ toc:close()
 assert(type(env.SlashCmdList.KRIEGERRP)=="function", "slash handler missing")
 state.frame.scripts.OnEvent(state.frame, "PLAYER_LOGIN")
 assert(addon.ready and addon.db and addon.db.outputLanguage=="deDE")
-assert(addon.db.textChance==100)
-assert(addon.db.ambientEnabled==false)
+assert(addon.db.textChance==30)
+assert(addon.db.cooldown==20)
+assert(addon.db.ambientChance==70)
+assert(addon.db.ambientMinInterval==180 and addon.db.ambientMaxInterval==420)
+assert(addon.db.ambientEnabled==true)
 assert(type(addon.ResetAmbientTimer)=="function")
 addon.db.racialTextChance=0
 
@@ -103,4 +110,37 @@ assert(not addon.TryText("CHARGE"), "other classes should not speak warrior text
 state.class="WARRIOR"
 assert(addon.TryText("CHARGE"), "warrior text should be sent")
 assert(#state.sent==3)
+-- Timer callbacks must never send chat. They only set a pending flag.
+addon.db.ambientChance=100
+addon.db.cooldown=0
+state.now=200 -- last actual send started the previous default 20s cooldown
+addon.ResetAmbientTimer()
+assert(#state.timers > 0)
+local lastTimer=state.timers[#state.timers].callback
+local before=#state.sent
+lastTimer()
+assert(#state.sent==before, "timer sent chat without a player action")
+assert(addon.HasPendingAmbient(), "timer did not queue ambient")
+assert(addon.TryText("SHIELD_BLOCK"), "queued ambient should flush on action")
+assert(#state.sent==before+1 and not addon.HasPendingAmbient())
+-- Turning ambient off must invalidate stale timers and discard queued lines.
+addon.ResetAmbientTimer()
+local stale=state.timers[#state.timers].callback
+addon.db.ambientEnabled=false
+addon.ResetAmbientTimer()
+local stopped=#state.sent
+stale()
+assert(#state.sent==stopped and not addon.HasPendingAmbient())
+assert(addon.TryAmbient(nil,true), "manual ambient should work when automatic is off")
+-- Rich list and diagnosis commands must be available.
+env.SlashCmdList.KRIEGERRP("list racial")
+env.SlashCmdList.KRIEGERRP("list all")
+env.SlashCmdList.KRIEGERRP("status")
+env.SlashCmdList.KRIEGERRP("debug")
+env.SlashCmdList.KRIEGERRP("ambient interval 180 420")
+assert(addon.db.ambientMinInterval==180 and addon.db.ambientMaxInterval==420)
+env.SlashCmdList.KRIEGERRP("ambient on")
+assert(addon.db.ambientEnabled)
+env.SlashCmdList.KRIEGERRP("ambient off")
+assert(not addon.db.ambientEnabled)
 print("KriegerRP runtime smoke checks passed.")
