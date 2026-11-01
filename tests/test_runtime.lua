@@ -66,14 +66,28 @@ local function noEnemy(key)
     assert(not line:find("Trainingspuppe",1,true), key.." leaked selected target")
 end
 for _,key in ipairs({"SHIELD_WALL","SHIELD_BLOCK","BATTLE_SHOUT",
-    "THUNDER_CLAP","WHIRLWIND","LAST_STAND","RECKLESSNESS","BLOODRAGE"}) do
+    "THUNDER_CLAP","WHIRLWIND","LAST_STAND","RECKLESSNESS","BLOODRAGE",
+    "BATTLE_STANCE","DEFENSIVE_STANCE","BERSERKER_STANCE","PIERCING_HOWL","TACTICAL_MASTERY"}) do
     noEnemy(key)
 end
 local line=addon.BuildText("CHARGE")
 assert(line:find("Trainingspuppe",1,true), "direct attack should name hostile target")
 state.hostile=false
 noEnemy("CHARGE")
+noEnemy("SPEARING_STRIKE")
 state.hostile=true
+assert(addon.BuildText("SPEARING_STRIKE"):find("Trainingspuppe",1,true),
+    "Spearing Strike should name a hostile target")
+local required={"BATTLE_STANCE","DEFENSIVE_STANCE","BERSERKER_STANCE",
+    "PIERCING_HOWL","SPEARING_STRIKE","TACTICAL_MASTERY"}
+for _, lang in ipairs({"deDE","enUS","frFR"}) do
+    addon.db.outputLanguage=lang
+    for _, key in ipairs(required) do
+        assert(addon.localeData[lang].texts[key], lang .. " lacks " .. key)
+        assert(addon.BuildText(key), lang .. " cannot build " .. key)
+    end
+end
+addon.db.outputLanguage="deDE"
 env.RPChatMod={GetChatLanguageID=function() return 6 end}
 assert(addon.SendText("Vorwärts!"))
 assert(state.sent[#state.sent].languageID==6, "shared language policy ignored")
