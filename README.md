@@ -1,4 +1,20 @@
-# KriegerRP 0.1.1 (Textüberarbeitung)
+# KriegerRP 0.1.2 (Textausbau)
+
+## Neue freie RP-Aktionen (0.1.2)
+
+Diese sechs manuellen Textaktionen ergänzen das bestehende Zauberbuch,
+stehen aber **nicht für trainierbare WoW-Fähigkeiten**:
+- `ARMOR_CHECK`
+- `WEAPON_DRILL`
+- `FORMATION`
+- `BATTLEFIELD_AID`
+- `BANNER_OATH`
+- `AFTER_BATTLE`
+
+Jeder Schlüssel hat eigenständige gesprochene Texte und /me-Handlungen
+in Deutsch, Englisch und Französisch. Alte RP-Makros, persönliche
+Texte und gespeicherte Einstellungen bleiben unverändert.
+
 
 **KriegerRP** ist das eigenständige Klassen-RP-AddOn für Kriegerinnen und Krieger
 im WoW-Classic+/Forever-Umfeld. Es liefert Fähigkeits- und Ambient-Texte,

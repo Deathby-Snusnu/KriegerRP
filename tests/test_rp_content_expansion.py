@@ -1,0 +1,45 @@
+"""Verify manually triggered creative RP actions in all locales."""
+import re
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+LOCALES = ("deDE", "enUS", "frFR")
+CLASS_KEYS = ["ARMOR_CHECK","WEAPON_DRILL","FORMATION","BATTLEFIELD_AID","BANNER_OATH","AFTER_BATTLE"]
+EXPECTED = 49
+VERSION = "0.1.2"
+
+
+class CreativeRpExpansion(unittest.TestCase):
+    def test_version(self):
+        toc = (ROOT / "KriegerRP.toc").read_text(encoding="utf-8")
+        self.assertIn("## Version: " + VERSION, toc)
+
+    def test_locale_parity_and_creative_content(self):
+        for lang in LOCALES:
+            with self.subTest(lang=lang):
+                source = (ROOT / "locales" / lang / "Texts.lua").read_text(encoding="utf-8")
+                keys = re.findall(r"\b([A-Z][A-Z0-9_]*)\s*=\s*\{", source)
+                self.assertEqual(len(set(keys)), EXPECTED)
+                for key in CLASS_KEYS:
+                    with self.subTest(locale=lang, key=key):
+                        self.assertEqual(keys.count(key), 1)
+                        start = source.index("    " + key + " = {")
+                        tail = source[start:source.find("\n", start)]
+                        from test_creative_voice_catalog import check_chat_line, parse_strings
+
+                        group = re.search(r'\bgruppe\s*=\s*\{((?:"(?:\\.|[^"\\])*"|[^"}])*)\}', tail)
+                        self.assertIsNotNone(group)
+                        lines = parse_strings(group.group(1))
+                        self.assertEqual(len(lines), 4)
+                        self.assertEqual(sum(line.startswith("*") for line in lines), 2)
+                        for line in lines:
+                            check_chat_line(line)
+                            self.assertNotIn("%s", line)
+                            if line.startswith("*"):
+                                self.assertTrue(line[1:-1].strip(), "empty emote")
+                self.assertNotIn("Neuer RP-Text", source)
+
+
+if __name__ == "__main__":
+    unittest.main()
