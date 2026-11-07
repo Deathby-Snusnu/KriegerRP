@@ -1,7 +1,7 @@
 ## Interface: 16001
 ## Title: Krieger RP
 ## Notes: Mehrsprachige, volkstypische Krieger-Rollenspieltexte
-## Version: 0.1.1
+## Version: 0.1.2
 ## SavedVariablesPerCharacter: KriegerRP_CharacterDB
 ## OptionalDeps: RPChatMod
 

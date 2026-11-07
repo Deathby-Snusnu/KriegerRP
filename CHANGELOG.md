@@ -3,6 +3,12 @@
 Alle Angaben beziehen sich auf Quellstände. Ein Merge, ein Installer-Build
 und eine erfolgreiche WoW-Ingame-Prüfung werden **nicht** vorausgesetzt.
 
+## 0.1.2 (unveröffentlicht: neue Alltagsszenen)
+
+- 6 neue allgemeine, bewusst nicht als Fähigkeiten ausgegebene Krieger-RP-Aktionen: Rüstungsprüfung, Waffentraining, Formation, Verwundetenhilfe, Bannereid und Nachbereitung des Kampfes.
+- DE/EN/FR: jeweils eigene gesprochene Texte und /me-Emotes; bisherige 43 Fähigkeitsschlüssel behalten ihre Bedeutung (insgesamt jetzt 49 Textaktionen).
+- Sprachen-/Versions-Regressionstest ergänzt; keine SavedVariables-Änderungen.
+
 ## 0.1.1 (unveröffentlicht: Kriegerstimmen statt Kampflog)
 
 ### Kreative Textsammlungen
