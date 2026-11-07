@@ -10,7 +10,16 @@ local targeted = {
     SHIELD_SLAM=true, CONCUSSION_BLOW=true, VICTORY_RUSH=true,
     SPEARING_STRIKE=true,
 }
+local friendlyActions = { BATTLEFIELD_AID=true, FORMATION=true }
 local function enemyName(key)
+    if friendlyActions[key] then
+        if type(UnitExists) ~= "function" or not UnitExists("target")
+            or type(UnitCanAssist) ~= "function"
+            or not UnitCanAssist("player", "target")
+            or type(UnitName) ~= "function" then return nil end
+        if type(UnitIsUnit) == "function" and UnitIsUnit("target", "player") then return nil end
+        return UnitName("target")
+    end
     if not targeted[key] or type(UnitExists) ~= "function" or not UnitExists("target") then return nil end
     if type(UnitCanAttack) == "function" and not UnitCanAttack("player", "target") then return nil end
     if type(UnitIsUnit) == "function" and UnitIsUnit("target", "player") then return nil end
