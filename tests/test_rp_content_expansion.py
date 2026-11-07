@@ -26,8 +26,18 @@ class CreativeRpExpansion(unittest.TestCase):
                         self.assertEqual(keys.count(key), 1)
                         start = source.index("    " + key + " = {")
                         tail = source[start:source.find("\n", start)]
-                        self.assertIn("gruppe = {", tail)
-                        self.assertIn("*", tail)
+                        from test_creative_voice_catalog import check_chat_line, parse_strings
+
+                        group = re.search(r'\bgruppe\s*=\s*\{((?:"(?:\\.|[^"\\])*"|[^"}])*)\}', tail)
+                        self.assertIsNotNone(group)
+                        lines = parse_strings(group.group(1))
+                        self.assertEqual(len(lines), 4)
+                        self.assertEqual(sum(line.startswith("*") for line in lines), 2)
+                        for line in lines:
+                            check_chat_line(line)
+                            self.assertNotIn("%s", line)
+                            if line.startswith("*"):
+                                self.assertTrue(line[1:-1].strip(), "empty emote")
                 self.assertNotIn("Neuer RP-Text", source)
 
 
