@@ -8,6 +8,10 @@ local function SafeUnitName(unit)
     if type(issecretvalue) == "function" and issecretvalue(name) then
         if unit == "pet" then return "Euer Begleiter" end
         if unit == "player" then return "Ihr" end
+        local lang = addon.db and addon.db.outputLanguage or "deDE"
+        if not addon.availableLocales[lang] then lang = "deDE" end
+        if lang == "enUS" then return "the target" end
+        if lang == "frFR" then return "la cible" end
         return "das Ziel"
     end
     return name
