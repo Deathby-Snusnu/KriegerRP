@@ -1,5 +1,18 @@
 -- SPDX-License-Identifier: MPL-2.0
 local _, addon = ...
+
+-- Protected WoW clients may return secret strings for unit names.
+-- Use a safe placeholder before comparison or text interpolation.
+local function SafeUnitName(unit)
+    local name = UnitName(unit)
+    if type(issecretvalue) == "function" and issecretvalue(name) then
+        if unit == "pet" then return "Euer Begleiter" end
+        if unit == "player" then return "Ihr" end
+        return "das Ziel"
+    end
+    return name
+end
+
 -- Only directed attacks and taunts may use the selected enemy's name.
 -- Shouts, defensive abilities and area attacks must remain untargeted.
 local targeted = {
@@ -18,13 +31,13 @@ local function enemyName(key)
             or not UnitCanAssist("player", "target")
             or type(UnitName) ~= "function" then return nil end
         if type(UnitIsUnit) == "function" and UnitIsUnit("target", "player") then return nil end
-        return UnitName("target")
+        return SafeUnitName("target")
     end
     if not targeted[key] or type(UnitExists) ~= "function" or not UnitExists("target") then return nil end
     if type(UnitCanAttack) == "function" and not UnitCanAttack("player", "target") then return nil end
     if type(UnitIsUnit) == "function" and UnitIsUnit("target", "player") then return nil end
     if type(UnitName) ~= "function" then return nil end
-    return UnitName("target")
+    return SafeUnitName("target")
 end
 local function choose(pool)
     if type(pool) ~= "table" or #pool < 1 then return nil end
