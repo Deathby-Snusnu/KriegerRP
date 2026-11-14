@@ -453,3 +453,16 @@ addon.localeData.deDE.racial = {
         TACTICAL_MASTERY = { "Ein Duell ist Geometrie mit Konsequenzen. Der Unterschied zwischen Mut und Übermut ist eine gute Fußstellung.", "*streicht eine Falte aus dem bestickten Ärmel; verändert unmerklich den Stand und bewahrt die Übersicht.*", "Die Klinge braucht keine Verzierung, nur den richtigen Winkel. Ein Schlachtfeld ist kein Würfelspiel. Es wird gelesen.", "*richtet den fein gearbeiteten Handschutz aus; mustert Wege, Gegner und Rückzugsräume, ohne die Waffe zu senken.*" },
     },
 }
+
+-- Hand-edited voice expansion: gnomish mechanics with battlefield consequences.
+local gnome = addon.localeData.deDE.racial.GNOME
+for _, line in ipairs({
+    "Die Strecke ist kurz. Die Bremswirkung überlasse ich der gegnerischen Rüstung!",
+    "*zieht den Kinnriemen fest, senkt den Schwerpunkt und schießt zwischen zwei Schilden hindurch.*",
+    "Keine Zeit für den zweiten Prototyp. Der erste läuft schon!",
+}) do table.insert(gnome.CHARGE, line) end
+for _, line in ipairs({
+    "Eine saubere Lücke. Ein sauberer Schlag. Endlich einmal keine Nachbesserung.",
+    "*wartet den Atemzug ab, in dem die gegnerische Deckung sinkt, und schlägt zu.*",
+    "Es ist keine Frage der Größe. Nur der richtigen Stelle.",
+}) do table.insert(gnome.EXECUTE, line) end

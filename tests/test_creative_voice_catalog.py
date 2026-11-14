@@ -105,6 +105,31 @@ class WarriorCreativeVoicesTests(unittest.TestCase):
                         self.assertNotIn(line, seen)
                         seen.add(line)
 
+    def test_gnome_charge_and_execute_expansions(self):
+        racial = (ROOT / "locales" / "deDE" / "Racial.lua").read_text(encoding="utf-8")
+        gnome_section = racial.split("    GNOME = {", 1)[1].split("\n    },", 1)[0]
+        entries = dict(RACIAL_ENTRY.findall(gnome_section))
+        for key in ("CHARGE", "EXECUTE"):
+            with self.subTest(ability=key):
+                original = parse_strings(entries[key])
+                append = re.search(
+                    r"for _, line in ipairs\(\{([^}]*)\}\) do table.insert\(gnome\."
+                    + key + r", line\) end",
+                    racial,
+                    re.S,
+                )
+                self.assertIsNotNone(append, key)
+                additions = parse_strings(append.group(1))
+                expanded = original + additions
+                self.assertEqual(len(original), 4, key)
+                self.assertEqual(len(additions), 3, key)
+                self.assertEqual(len(expanded), 7, key)
+                self.assertEqual(sum(line.startswith("*") for line in expanded), 3, key)
+                self.assertEqual(len(set(expanded)), len(expanded), key)
+                for line in expanded:
+                    check_chat_line(line)
+                    self.assertNotIn("%s", line, key)
+
     def test_chat_runtime_unchanged(self):
         chat = (ROOT / "core" / "Chat.lua").read_text(encoding="utf-8")
         self.assertIn('destination = emote and "EMOTE" or channel()', chat)
