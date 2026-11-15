@@ -73,6 +73,15 @@ class RacialQualityAudit(unittest.TestCase):
                         if text.startswith("*"):
                             self.assertEqual(text.count("*"), 2)
 
+    def test_no_generic_gnome_opening_formula(self):
+        path = ROOT / "locales" / "deDE" / "Racial.lua"
+        source = path.read_text(encoding="utf-8")
+        self.assertNotIn(
+            "Ein sauberer Versuch braucht einen präzisen Treffer.",
+            source,
+            "Use ability-specific introductions instead of recycled openings"
+        )
+
     def test_duplicate_regression(self):
         for locale, ceiling in DUPLICATE_CEILINGS.items():
             with self.subTest(locale=locale):
