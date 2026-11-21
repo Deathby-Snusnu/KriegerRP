@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.3 (unreleased)
+
+- Optionale MusicRP-Texte und Emotes in drei Sprachen für acht Fähigkeiten, inkl. neuer Schalter und Validierung.
+- TOC auf 0.1.3 aktualisiert, inklusive neuer MusicRP-Datei für Installation/Updates via RPTextStudio.
+- Regressionstests für die neuen Einstellungen und Textpools.
+
+
 Alle Angaben beziehen sich auf Quellstände. Ein Merge, ein Installer-Build
 und eine erfolgreiche WoW-Ingame-Prüfung werden **nicht** vorausgesetzt.
 
