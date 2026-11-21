@@ -35,14 +35,3 @@ addon.musicRPReferences.DEFENSIVE_STANCE = { artist = "Sepultura", song = "Refus
 addon.musicRP.deDE.DEFENSIVE_STANCE = { "Rückzug ist eine Entscheidung. Heute treffe ich sie nicht.", "*verlagert das Gewicht und schließt die Lücke in der Deckung.*" }
 addon.musicRP.enUS.DEFENSIVE_STANCE = { "Retreat is a choice. Not one I make today.", "*shifts weight and closes a gap in the guard.*" }
 addon.musicRP.frFR.DEFENSIVE_STANCE = { "Reculer est un choix. Pas celui que je fais aujourd'hui.", "*déplace son poids et referme sa garde.*" }
-
-function addon.ChooseMusicText(key)
-    local db = addon.db
-    if not db or not db.musicEnabled or (db.musicChance or 0) <= 0 then return nil end
-    if math.random(100) > db.musicChance then return nil end
-    local language = db.outputLanguage or "deDE"
-    local texts = addon.musicRP[language] and addon.musicRP[language][key]
-    if not texts then texts = addon.musicRP.deDE[key] end
-    if type(texts) ~= "table" or #texts == 0 then return nil end
-    return texts[math.random(#texts)]
-end

@@ -21,6 +21,7 @@ core\Cooldown.lua
 core\Ambient.lua
 music\CreativeVoices.lua
 music\MusicRP.lua
+core\Music.lua
 core\Text.lua
 core\Chat.lua
 core\Commands.lua
