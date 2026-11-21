@@ -13,7 +13,7 @@ function addon.InitializeDatabase()
         if type(value) ~= "number" or value ~= value then value = addon.defaults[key] end
         addon.db[key] = math.max(0, math.min(100, math.floor(value)))
     end
-    for _, key in ipairs({"ambientEnabled", "ambientInCombat"}) do
+    for _, key in ipairs({"ambientEnabled", "ambientInCombat", "musicEnabled"}) do
         if type(addon.db[key]) ~= "boolean" then addon.db[key] = addon.defaults[key] end
     end
     for _, key in ipairs({"ambientMinInterval", "ambientMaxInterval"}) do
