@@ -89,9 +89,12 @@ class WarriorCatalogChecks(unittest.TestCase):
                 source = (ROOT / "locales" / lang / name).read_text(encoding="utf-8")
                 self.assertTrue(source.startswith("-- SPDX-License-Identifier: CC-BY-SA-4.0"))
         for name in ("KriegerRP.lua", "core/Ambient.lua", "core/Chat.lua",
-                     "core/Commands.lua", "core/Cooldown.lua", "core/Text.lua"):
+                     "core/Commands.lua", "core/Cooldown.lua", "core/Music.lua",
+                     "core/Text.lua"):
             source = (ROOT / name).read_text(encoding="utf-8")
             self.assertTrue(source.startswith("-- SPDX-License-Identifier: MPL-2.0"))
+        music = (ROOT / "music" / "MusicRP.lua").read_text(encoding="utf-8")
+        self.assertTrue(music.startswith("-- SPDX-License-Identifier: CC-BY-SA-4.0"))
 
 if __name__ == "__main__":
     unittest.main()

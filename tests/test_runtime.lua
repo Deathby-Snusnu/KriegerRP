@@ -163,4 +163,46 @@ env.SlashCmdList.KRIEGERRP("ambient on")
 assert(addon.db.ambientEnabled)
 env.SlashCmdList.KRIEGERRP("ambient off")
 assert(not addon.db.ambientEnabled)
+-- New MusicRP layer must remain off by default, persist settings and keep spell pools.
+assert(addon.db.musicEnabled==false and addon.db.musicChance==15)
+assert(type(addon.musicRPReferences)=="table")
+local amount=0
+for key, ref in pairs(addon.musicRPReferences) do
+    amount=amount+1
+    assert(type(ref.artist)=="string" and type(ref.song)=="string")
+    for _, lang in ipairs({"deDE","enUS","frFR"}) do
+        local pool=addon.musicRP[lang][key]
+        assert(type(pool)=="table" and #pool==2)
+        assert(#pool[1]<=255 and #pool[2]<=255)
+        assert(pool[2]:sub(1,1)=="*" and pool[2]:sub(-1)=="*")
+    end
+end
+assert(amount==8)
+env.SlashCmdList.KRIEGERRP("music on")
+env.SlashCmdList.KRIEGERRP("music chance 100")
+assert(addon.db.musicEnabled and addon.db.musicChance==100)
+addon.db.outputLanguage="deDE"
+local musicResult=addon.ChooseMusicText("CHARGE")
+assert(musicResult==addon.musicRP.deDE.CHARGE[1] or musicResult==addon.musicRP.deDE.CHARGE[2])
+assert(addon.BuildText("CHARGE")==musicResult, "BuildText did not select MusicRP")
+local sentBeforeMusic=#state.sent
+addon.db.textChance=0
+assert(not addon.TryText("CHARGE"), "chance 0 must suppress MusicRP")
+assert(#state.sent==sentBeforeMusic)
+addon.db.textChance=100
+addon.db.cooldown=20
+assert(addon.TryText("CHARGE"), "MusicRP should use the normal chat pipeline")
+assert(#state.sent==sentBeforeMusic+1 and state.sent[#state.sent].line==musicResult,
+    "MusicRP text did not reach chat")
+assert(not addon.TryText("CHARGE"), "cooldown must suppress MusicRP")
+assert(#state.sent==sentBeforeMusic+1)
+state.now=state.now+20
+addon.db.cooldown=0
+env.SlashCmdList.KRIEGERRP("music chance 999")
+assert(addon.db.musicChance==100)
+env.SlashCmdList.KRIEGERRP("music off")
+assert(addon.ChooseMusicText("CHARGE")==nil)
+assert(addon.BuildText("CHARGE"):find("Trainingspuppe",1,true),
+    "disabling MusicRP should restore normal targeted text")
+
 print("KriegerRP runtime smoke checks passed.")

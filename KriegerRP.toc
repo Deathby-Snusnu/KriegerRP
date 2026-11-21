@@ -1,7 +1,7 @@
 ## Interface: 16001
 ## Title: Krieger RP
 ## Notes: Mehrsprachige, volkstypische Krieger-Rollenspieltexte
-## Version: 0.1.2
+## Version: 0.1.3
 ## SavedVariablesPerCharacter: KriegerRP_CharacterDB
 ## OptionalDeps: RPChatMod
 
@@ -19,6 +19,9 @@ locales\frFR\Ambient.lua
 core\Database.lua
 core\Cooldown.lua
 core\Ambient.lua
+music\CreativeVoices.lua
+music\MusicRP.lua
+core\Music.lua
 core\Text.lua
 core\Chat.lua
 core\Commands.lua

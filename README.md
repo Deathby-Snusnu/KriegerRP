@@ -1,4 +1,17 @@
-# KriegerRP 0.1.2 (Textausbau)
+## Version 0.1.3: kreative MusicRP-Texte und RPTextStudio-Updates
+
+Acht neue, selbst verfasste, musikalisch inspirierte Sprech-/Emote-Paare in **deDE**, **enUS** und **frFR**. Songtitel und Künstler dienen ausschließlich als interne Inspirationsmetadaten; die Chat-Ausgabe verwendet keine übernommenen Lyrics. Die normalen Text-, Rassen- und Ambient-Pools bleiben erhalten, MusicRP ist **standardmäßig deaktiviert**:
+
+```text
+/krp music on
+/krp music chance 15
+/krp music status
+/krp music off
+```
+
+Der normale Textchance-/Cooldown-Filter bleibt wirksam. Die Version ist in `KriegerRP.toc` von **0.1.2** auf **0.1.3** erhöht, die neue `music/MusicRP.lua` steht in der TOC-Ladeliste. **RPTextStudio:** Im Entwicklungskanal wird eine neuere numerische TOC-Version auf `main` erst *nach dem Merge* erkannt. Für den stabilen Kanal ist zusätzlich ein **GitHub-Release mit Tag `v0.1.3`** erforderlich, dessen enthaltene TOC ebenfalls `0.1.3` ausweist. Ein Pull Request allein aktualisiert keinen Release; vor dem Merge/Release die Tests kontrollieren. Lokale Änderungen vor der Update-Installation sichern und die Installationsvorschau beachten.
+
+# KriegerRP 0.1.3 (MusicRP und Textausbau)
 
 ## Neue freie RP-Aktionen (0.1.2)
 
