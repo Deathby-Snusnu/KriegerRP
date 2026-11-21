@@ -141,12 +141,32 @@ end
 
 local function help()
     notify("/krp help | status | debug | list [racial|all]")
+    notify("/krp music on|off|status|chance 0-100")
     notify("/krp <SCHLUESSEL> (z.B. SHIELD_BLOCK), /krp ambient [test|on|off|status]")
     notify("/krp chance 0-100 | cooldown 0-3600 | racial 0-100")
     notify("/krp ambient chance 0-100 | combat on/off | interval MIN MAX")
     notify("/krp language deDE|enUS|frFR")
     notify("/krp channel SAY|YELL|AUTO|PARTY|RAID|INSTANCE_CHAT")
     notify("*...* sind /me-Emotes. Passive Talenttexte nur per /krp, nicht per /cast.")
+end
+
+local function MusicCommand(argument)
+    local command, value = (argument or ""):match("^%s*(%S*)%s*(.-)%s*$")
+    command = (command or ""):lower()
+    if command == "on" or command == "off" then
+        addon.db.musicEnabled = command == "on"
+    elseif command == "chance" then
+        local n = tonumber(value)
+        if not n or n ~= math.floor(n) or n < 0 or n > 100 then
+            notify("Benutzung: /krp music chance 0-100")
+            return
+        end
+        addon.db.musicChance = n
+    elseif command ~= "" and command ~= "status" then
+        notify("Benutzung: /krp music on|off|status|chance 0-100")
+        return
+    end
+    notify("MusicRP: " .. (addon.db.musicEnabled and "an" or "aus") .. " | Chance " .. tostring(addon.db.musicChance) .. "%")
 end
 
 SlashCmdList["KRIEGERRP"] = function(message)
@@ -158,6 +178,7 @@ SlashCmdList["KRIEGERRP"] = function(message)
     elseif command == "status" then status()
     elseif command == "debug" then debug()
     elseif command == "list" then listKeys(arg:lower())
+    elseif command == "music" then MusicCommand(arg)
     elseif command == "ambient" then ambient(arg)
     elseif command == "language" then
         local lang = languages[arg:lower()]
