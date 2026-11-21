@@ -184,9 +184,25 @@ assert(addon.db.musicEnabled and addon.db.musicChance==100)
 addon.db.outputLanguage="deDE"
 local musicResult=addon.ChooseMusicText("CHARGE")
 assert(musicResult==addon.musicRP.deDE.CHARGE[1] or musicResult==addon.musicRP.deDE.CHARGE[2])
+assert(addon.BuildText("CHARGE")==musicResult, "BuildText did not select MusicRP")
+local sentBeforeMusic=#state.sent
+addon.db.textChance=0
+assert(not addon.TryText("CHARGE"), "chance 0 must suppress MusicRP")
+assert(#state.sent==sentBeforeMusic)
+addon.db.textChance=100
+addon.db.cooldown=20
+assert(addon.TryText("CHARGE"), "MusicRP should use the normal chat pipeline")
+assert(#state.sent==sentBeforeMusic+1 and state.sent[#state.sent].line==musicResult,
+    "MusicRP text did not reach chat")
+assert(not addon.TryText("CHARGE"), "cooldown must suppress MusicRP")
+assert(#state.sent==sentBeforeMusic+1)
+state.now=state.now+20
+addon.db.cooldown=0
 env.SlashCmdList.KRIEGERRP("music chance 999")
 assert(addon.db.musicChance==100)
 env.SlashCmdList.KRIEGERRP("music off")
 assert(addon.ChooseMusicText("CHARGE")==nil)
+assert(addon.BuildText("CHARGE"):find("Trainingspuppe",1,true),
+    "disabling MusicRP should restore normal targeted text")
 
 print("KriegerRP runtime smoke checks passed.")
