@@ -163,4 +163,30 @@ env.SlashCmdList.KRIEGERRP("ambient on")
 assert(addon.db.ambientEnabled)
 env.SlashCmdList.KRIEGERRP("ambient off")
 assert(not addon.db.ambientEnabled)
+-- New MusicRP layer must remain off by default, persist settings and keep spell pools.
+assert(addon.db.musicEnabled==false and addon.db.musicChance==15)
+assert(type(addon.musicRPReferences)=="table")
+local amount=0
+for key, ref in pairs(addon.musicRPReferences) do
+    amount=amount+1
+    assert(type(ref.artist)=="string" and type(ref.song)=="string")
+    for _, lang in ipairs({"deDE","enUS","frFR"}) do
+        local pool=addon.musicRP[lang][key]
+        assert(type(pool)=="table" and #pool==2)
+        assert(#pool[1]<=255 and #pool[2]<=255)
+        assert(pool[2]:sub(1,1)=="*" and pool[2]:sub(-1)=="*")
+    end
+end
+assert(amount==8)
+env.SlashCmdList.KRIEGERRP("music on")
+env.SlashCmdList.KRIEGERRP("music chance 100")
+assert(addon.db.musicEnabled and addon.db.musicChance==100)
+addon.db.outputLanguage="deDE"
+local musicResult=addon.ChooseMusicText("CHARGE")
+assert(musicResult==addon.musicRP.deDE.CHARGE[1] or musicResult==addon.musicRP.deDE.CHARGE[2])
+env.SlashCmdList.KRIEGERRP("music chance 999")
+assert(addon.db.musicChance==100)
+env.SlashCmdList.KRIEGERRP("music off")
+assert(addon.ChooseMusicText("CHARGE")==nil)
+
 print("KriegerRP runtime smoke checks passed.")
