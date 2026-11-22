@@ -172,9 +172,11 @@ for key, ref in pairs(addon.musicRPReferences) do
     assert(type(ref.artist)=="string" and type(ref.song)=="string")
     for _, lang in ipairs({"deDE","enUS","frFR"}) do
         local pool=addon.musicRP[lang][key]
-        assert(type(pool)=="table" and #pool==2)
-        assert(#pool[1]<=255 and #pool[2]<=255)
-        assert(pool[2]:sub(1,1)=="*" and pool[2]:sub(-1)=="*")
+        assert(type(pool)=="table" and #pool>=2 and #pool%2==0)
+        for i, line in ipairs(pool) do
+            assert(#line<=255)
+            if i%2==0 then assert(line:sub(1,1)=="*" and line:sub(-1)=="*") end
+        end
     end
 end
 assert(amount==8)
