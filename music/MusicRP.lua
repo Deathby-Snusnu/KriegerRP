@@ -35,3 +35,17 @@ addon.musicRPReferences.DEFENSIVE_STANCE = { artist = "Sepultura", song = "Refus
 addon.musicRP.deDE.DEFENSIVE_STANCE = { "Rückzug ist eine Entscheidung. Heute treffe ich sie nicht.", "*verlagert das Gewicht und schließt die Lücke in der Deckung.*" }
 addon.musicRP.enUS.DEFENSIVE_STANCE = { "Retreat is a choice. Not one I make today.", "*shifts weight and closes a gap in the guard.*" }
 addon.musicRP.frFR.DEFENSIVE_STANCE = { "Reculer est un choix. Pas celui que je fais aujourd'hui.", "*déplace son poids et referme sa garde.*" }
+
+-- Extra original spoken lines and actions for existing music-inspired keys.
+table.insert(addon.musicRP.deDE.BATTLE_SHOUT, "Wer an meiner Seite steht, muss nicht ohne Furcht sein. Nur standhaft.")
+table.insert(addon.musicRP.deDE.BATTLE_SHOUT, "*schlägt die Waffe gegen den Schild und ruft die Reihe zusammen.*")
+table.insert(addon.musicRP.enUS.BATTLE_SHOUT, "Those beside me need not be fearless. Only steadfast.")
+table.insert(addon.musicRP.enUS.BATTLE_SHOUT, "*strikes the shield and rallies the line.*")
+table.insert(addon.musicRP.frFR.BATTLE_SHOUT, "Ceux qui se tiennent près de moi n'ont pas à être sans peur. Seulement fermes.")
+table.insert(addon.musicRP.frFR.BATTLE_SHOUT, "*frappe son bouclier et rassemble les rangs.*")
+table.insert(addon.musicRP.deDE.AFTER_BATTLE, "Der Lärm verstummt. Für manche Namen wird es nie wieder still.")
+table.insert(addon.musicRP.deDE.AFTER_BATTLE, "*richtet einen gefallenen Schild sorgfältig auf.*")
+table.insert(addon.musicRP.enUS.AFTER_BATTLE, "The noise fades. Some names will never be quiet again.")
+table.insert(addon.musicRP.enUS.AFTER_BATTLE, "*sets a fallen shield upright with care.*")
+table.insert(addon.musicRP.frFR.AFTER_BATTLE, "Le bruit s'éteint. Certains noms ne retrouveront jamais le silence.")
+table.insert(addon.musicRP.frFR.AFTER_BATTLE, "*redresse avec soin un bouclier tombé.*")
