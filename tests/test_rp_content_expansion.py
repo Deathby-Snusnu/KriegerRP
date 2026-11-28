@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LOCALES = ("deDE", "enUS", "frFR")
 CLASS_KEYS = ["ARMOR_CHECK","WEAPON_DRILL","FORMATION","BATTLEFIELD_AID","BANNER_OATH","AFTER_BATTLE"]
 EXPECTED = 49
-VERSION = "0.1.3"
+VERSION = "0.1.4"
 
 
 class CreativeRpExpansion(unittest.TestCase):
